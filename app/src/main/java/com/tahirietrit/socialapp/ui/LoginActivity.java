@@ -15,6 +15,7 @@ import com.tahirietrit.socialapp.api.Servicefactory;
 import com.tahirietrit.socialapp.databinding.LoginActivityBinding;
 import com.tahirietrit.socialapp.model.LoginResponse;
 import com.tahirietrit.socialapp.model.User;
+import com.tahirietrit.socialapp.prefs.AppPreferences;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -29,6 +30,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        AppPreferences.init(getApplicationContext());
         binding = DataBindingUtil.setContentView(this, R.layout.login_activity);
         binding.loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -36,6 +38,12 @@ public class LoginActivity extends AppCompatActivity {
                 loginUser();
             }
         });
+        if (AppPreferences.getUserid() != null) {
+            Intent i = new Intent(getApplicationContext(), MainActivity.class);
+            i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(i);
+            finish();
+        }
     }
 
     private void loginUser() {
@@ -48,11 +56,13 @@ public class LoginActivity extends AppCompatActivity {
                 User user = response.body().getUser().get(0);
 
                 if (user != null && user.getStatus().equalsIgnoreCase("success")) {
+                    AppPreferences.saveUsername(user.getUsername());
+                    AppPreferences.saveUserID(user.getUserID());
                     Intent i = new Intent(getApplicationContext(), MainActivity.class);
                     i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(i);
                     finish();
-                }else{
+                } else {
                     Toast.makeText(getApplicationContext(), "Wrong combination",
                             Toast.LENGTH_SHORT).show();
                 }

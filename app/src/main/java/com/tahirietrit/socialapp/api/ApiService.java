@@ -12,3 +12,5 @@ public interface ApiService {
     Call<LoginResponse> loginUser(@Query("User") String user,
                                   @Query("Password") String password);
 }
+//wifi: auk-campus
+//pass: ritkosova
