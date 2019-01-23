@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -16,6 +17,7 @@ import com.tahirietrit.socialapp.model.User;
 import com.tahirietrit.socialapp.model.feed.FeedResponse;
 import com.tahirietrit.socialapp.model.feed.Post;
 import com.tahirietrit.socialapp.prefs.AppPreferences;
+import com.tahirietrit.socialapp.ui.CreateNewPostActivity;
 import com.tahirietrit.socialapp.ui.DetailActvity;
 
 import java.util.ArrayList;
@@ -28,6 +30,7 @@ public class MainActivity extends AppCompatActivity implements AdapterCallbacks 
     ListView listView;
     ProgressBar progressBar;
     FeedAdapter adapter;
+    Button addButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,9 +38,24 @@ public class MainActivity extends AppCompatActivity implements AdapterCallbacks 
         setContentView(R.layout.activity_main);
         listView = findViewById(R.id.feed_listview);
         progressBar = findViewById(R.id.loader);
+        addButton = findViewById(R.id.add_button);
         adapter = new FeedAdapter(getLayoutInflater(), this);
         listView.setAdapter(adapter);
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getApplicationContext(), CreateNewPostActivity.class);
+                startActivity(i);
+
+            }
+        });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         getFeed();
+
     }
 
     private void getFeed() {
@@ -60,11 +78,11 @@ public class MainActivity extends AppCompatActivity implements AdapterCallbacks 
     }
 
     private ArrayList<Post> clearPosts(ArrayList<Post> feed) {
-        for (int i = 0; i < feed.size(); i++) {
-            if (!feed.get(i).photoUrl.endsWith(".jpg") || !feed.get(i).photoUrl.endsWith(".png")) {
-                feed.remove(i);
-            }
-        }
+//        for (int i = 0; i < feed.size(); i++) {
+//            if (!feed.get(i).photoUrl.endsWith(".jpg") || !feed.get(i).photoUrl.endsWith(".png")) {
+//                feed.remove(i);
+//            }
+//        }
         return feed;
     }
 
